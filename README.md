@@ -15,7 +15,7 @@ This platform evaluates production change requests and produces:
 
 ---
 
-## Executive Summary
+## Summary
 
 Modern engineering organizations move fast — but unmanaged change risk leads to:
 
