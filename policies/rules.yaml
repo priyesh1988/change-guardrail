@@ -1,0 +1,34 @@
+risk_weights:
+  prod: 20
+  pii: 15
+  internet_exposed: 15
+  db_migration: 20
+  schema_change: 15
+  uses_feature_flag: -10
+  has_rollback: -10
+  has_runbook: -5
+  after_hours: 10
+  weekend: 10
+  high_blast_radius: 20
+
+approval_rules:
+  - if: "env == 'prod' and risk_score >= 60"
+    require: ["CAB", "SRE_ONCALL"]
+  - if: "pii == True or internet_exposed == True"
+    require: ["SECURITY"]
+  - if: "db_migration == True or schema_change == True"
+    require: ["DBA"]
+  - if: "risk_score >= 80"
+    require: ["VP_ENGINEERING"]
+
+release_plan_templates:
+  default:
+    prechecks:
+      - "Verify dashboards green"
+      - "Confirm error budget"
+    steps:
+      - "Enable feature flag at 1%"
+      - "Gradual rollout to 100%"
+    rollback:
+      - "Disable feature flag"
+      - "Rollback deployment" 
